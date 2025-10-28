@@ -1,10 +1,15 @@
 <template>
   <div class="container">
     <h1>Jobs</h1>
-    <div v-for="job in jobs" :key="job.id" class="job">
-      <router-link :to="{ name: 'jobsdetails', params: { id: job.id } }">
-        <h2>{{ job.title }}</h2>
-      </router-link>
+    <div v-if="jobs.length">
+      <div v-for="job in jobs" :key="job.id" class="job">
+        <router-link :to="{ name: 'jobsdetails', params: { id: job.id } }">
+          <h2>{{ job.title }}</h2>
+        </router-link>
+      </div>
+    </div>
+    <div v-else>
+      loading jobs .....
     </div>
   </div>
 </template>
@@ -13,24 +18,25 @@
 export default {
   data() {
     return {
-      jobs: [
-        { title: "UX Designer", id: 1, detail: "lorm" },
-        { title: "Web Developer", id: 2, detail: "lorm" },
-        { title: "Vue Developer", id: 3, detail: "lorm" },
-      ],
+      jobs: [],
     };
   },
+  mounted(){
+    fetch('http://localhost:3000/jobs')
+    .then(res => res.json())
+    .then(data => this.jobs = data)
+  }
 };
 </script>
 
-<style>
+<style scoped>
 * {
   padding: 0;
   box-sizing: border-box;
   width: 1000px;
   margin: 0 auto;
 }
-h1{
+h1 {
   font-family: sans-serif;
   font-size: 50px;
   margin-bottom: 20px;
@@ -46,10 +52,10 @@ h1{
   cursor: pointer;
   box-shadow: 0 0 30px 10px rgba(0, 0, 0, 0.07);
 }
-a{
+a {
   text-decoration: none;
 }
-.job h2:hover{
+.job h2:hover {
   background-color: #f7f7f7;
   color: #444;
 }
